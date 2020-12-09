@@ -4,11 +4,11 @@
 
 import arrow
 from dateutil import tz
-from workflow import ICON_CLOCK, ICON_INFO
+from workflow import ICON_CLOCK, ICON_NOTE
 
 FORMAT_LIST = (
-    (ICON_INFO, 'X', 'UTC Timestamp (s)'),
-    (ICON_INFO, 'x', 'UTC Timestamp (us)'),
+    (ICON_NOTE, 'X', 'UTC Timestamp (s)'),
+    (ICON_NOTE, 'x', 'UTC Timestamp (us)'),
     (
         ICON_CLOCK, 'YYYY-MM-DD HH:mm:ss', 'Date and Time'
     ),
