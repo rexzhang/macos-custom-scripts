@@ -1,5 +1,7 @@
 *.dist-info
 *.alfredworkflow
+.alfredversionchecked
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

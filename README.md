@@ -1,1 +1,2 @@
-# alfred-workflow-time
+# Alfred Workflow: Time Converter
+
