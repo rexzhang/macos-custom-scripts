@@ -44,7 +44,7 @@
 				<key>argumenttrimmode</key>
 				<integer>0</integer>
 				<key>argumenttype</key>
-				<integer>1</integer>
+				<integer>0</integer>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>keyword</key>
@@ -66,9 +66,9 @@
 				<key>scriptfile</key>
 				<string>ls</string>
 				<key>subtext</key>
-				<string></string>
+				<string>Examples: 1607609661, 2020-12-10 22:14:33, now</string>
 				<key>title</key>
-				<string></string>
+				<string>Please enter timestamp, datetime string, or "now"</string>
 				<key>type</key>
 				<integer>0</integer>
 				<key>withspace</key>
