@@ -18,9 +18,9 @@ FORMAT_LIST = (
     ),
     (  # https://www.w3.org/TR/NOTE-datetime
         ICON_CLOCK, 'YYYY-MM-DDTHH:mm:ssZZ',
-        'W3C'
+        'W3C Format'
     ),
-    (ICON_CLOCK, arrow.FORMAT_RFC850, 'RFC850'),
+    (ICON_CLOCK, arrow.FORMAT_RFC850, 'RFC850 Format'),
     # FORMAT_RFC3339
 )
 
@@ -49,7 +49,7 @@ def create_feedback(time, is_now):
 
         f.append({
             'title': value,
-            'subtitle': 'Current {}'.format(desc) if is_now else desc,
+            'subtitle': 'Current, {}'.format(desc) if is_now else desc,
             'valid': True,
             'arg': value,
             'icon': icon,
