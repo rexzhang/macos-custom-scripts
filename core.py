@@ -15,15 +15,15 @@ DEFAULT_FEEDBACK = [{
 }]
 
 SHIFT_UNIT_MAP = {
-    'ms': 'microsecond',
-    's': 'second',
-    'm': 'minute',
-    'h': 'hour',
-    'd': 'day',
+    'ms': 'microseconds',
+    's': 'seconds',
+    'm': 'minutes',
+    'h': 'hours',
+    'd': 'days',
     'w': 'weeks',
-    'M': 'month',
+    'M': 'months',
     'q': 'quarters',
-    'y': 'year',
+    'y': 'years',
 }
 
 FORMAT_LIST = (
@@ -86,6 +86,7 @@ class Time(object):
                 break
 
         self._parser_datetime()
+        self._apply_shift()
 
     def _parser_extend_info(self):
         """parser timezone, shift"""
