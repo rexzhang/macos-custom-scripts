@@ -68,7 +68,7 @@
 				<key>subtext</key>
 				<string>Examples: 1607609661, 2020-12-10 22:14:33, now</string>
 				<key>title</key>
-				<string>Please enter timestamp, datetime string, or "now"</string>
+				<string>Please enter timestamp, datetime string, "now", or space</string>
 				<key>type</key>
 				<integer>0</integer>
 				<key>withspace</key>
