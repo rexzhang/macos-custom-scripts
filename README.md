@@ -17,3 +17,4 @@ Download from [Github release](https://github.com/rexzhang/alfred-workflow-time-
 
 ## Will
 - multi time shift args?
+- time shift support ms/q

@@ -52,7 +52,7 @@ FORMAT_LIST = (
 )
 
 RE_TIMEZONE = '^[+-][0-9]{2}$'
-RE_SHIFT = '^[+-][0-9]+[smhdwmy]$'
+RE_SHIFT = '^[+-][0-9]+[smhdwMy]$'
 
 
 class Time(object):
