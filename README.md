@@ -6,6 +6,14 @@
 ## Get it
 Download from [Github release](https://github.com/rexzhang/alfred-workflow-time-converter/releases), double click package file to install.
 
+## History
+
+### 0.1.0
+- first release
+
+### 0.2.0(not release yet)
+- support time zone
+- support time shift
+
 ## Will
-- time zone
-- time shift
+- multi time shift args?

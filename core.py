@@ -14,6 +14,18 @@ DEFAULT_FEEDBACK = [{
     'icon': ICON_ERROR,
 }]
 
+SHIFT_UNIT_MAP = {
+    'ms': 'microsecond',
+    's': 'second',
+    'm': 'minute',
+    'h': 'hour',
+    'd': 'day',
+    'w': 'weeks',
+    'M': 'month',
+    'q': 'quarters',
+    'y': 'year',
+}
+
 FORMAT_LIST = (
     (ICON_NOTE, True, 'X', 'Timestamp(s)'),
     (ICON_NOTE, True, 'x', 'Timestamp(us)'),
@@ -26,14 +38,15 @@ FORMAT_LIST = (
     ),
     (  # https://www.w3.org/TR/NOTE-datetime
         ICON_CLOCK, False, 'YYYY-MM-DDTHH:mm:ssZZ',
-        'W3C Format'
+        'ISO 8601/W3C Format'
     ),
     (ICON_CLOCK, False, arrow.FORMAT_RFC850, 'RFC850 Format'),
+    (ICON_CLOCK, False, arrow.FORMAT_RFC3339, 'RFC3339 Format'),
     # FORMAT_RFC3339
 )
 
 RE_TIMEZONE = '^[+-][0-9]{2}$'
-RE_SHIFT = '^[+-][0-9]+[smhdmy]$'
+RE_SHIFT = '^[+-][0-9]+[smhdwmy]$'
 
 
 class Time(object):
@@ -72,7 +85,7 @@ class Time(object):
             if not self._parser_extend_info():
                 break
 
-        return self._parser_datetime()
+        self._parser_datetime()
 
     def _parser_extend_info(self):
         """parser timezone, shift"""
@@ -88,17 +101,23 @@ class Time(object):
         if info.upper() == 'UTC' or info == '+00' or info == '-00':
             self.query = query
             self.zone = 'UTC'
-            self.wf.logger.debug('found zone info:'.format(self.zone))
+            self.wf.logger.debug('found zone info:{}'.format(self.zone))
             return True
 
         r = re.match(RE_TIMEZONE, info)
         if r:
             self.query = query
             self.zone = info
-            self.wf.logger.debug('found zone info:'.format(self.zone))
+            self.wf.logger.debug('found zone info:{}'.format(self.zone))
             return True
 
         # time shift TODO
+        r = re.match(RE_SHIFT, info)
+        if r:
+            self.query = query
+            self.shift = info
+            self.wf.logger.debug('found shift info:{}'.format(self.shift))
+            return True
 
         return False
 
@@ -113,16 +132,29 @@ class Time(object):
             return True
 
         except arrow.ParserError:
-            self.wf.logger.debug(
-                'parser datetime error,query string:{}'.format(self.query)
-            )
+            pass
 
         if self.query == 'now' or self.query == '':
             self.now = True
             self.time = arrow.now()
             return True
 
+        self.wf.logger.debug(
+            'parser datetime error,query string:{}'.format(self.query)
+        )
         return False
+
+    def _apply_shift(self):
+        if self.time is None or self.shift is None:
+            return
+
+        index = len(self.shift) - 1
+        unit = self.shift[index]
+        number = int(self.shift[:index])
+        kwargs = {
+            SHIFT_UNIT_MAP[unit]: number,
+        }
+        self.time = self.time.shift(**kwargs)
 
     def get_feedback(self):
         if self.time is None:
@@ -135,20 +167,26 @@ class Time(object):
 
         f = list()
         for icon, force_utc, fmt, desc_format in FORMAT_LIST:
+            # time shift
+            if self.shift:
+                desc_shift = '{}, '.format(self.shift)
+            else:
+                desc_shift = ''
 
+            # time znone
             if force_utc:
                 self.time = self.time.to('UTC')
-                desc_zone = 'UTC, '
+                desc_zone = 'UTC'
             elif self.zone and not force_utc:
                 self.time = self.time.to(self.zone)
-                desc_zone = '{}, '.format(self.zone)
+                desc_zone = self.zone
             else:
                 self.time = self.time.to('local')
-                desc_zone = 'Local, '
+                desc_zone = 'Local'
 
             value = self.time.format(fmt)
-            subtitle = '{}{}{}'.format(
-                desc_now, desc_zone, desc_format
+            subtitle = '{}{}[{}] {}'.format(
+                desc_now, desc_shift, desc_zone, desc_format
             )
             f.append({
                 'title': value,

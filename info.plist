@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>bundleid</key>
-	<string>com.rexzhang.alfred-workflow-time</string>
+	<string>com.rexzhang.alfred-workflow-time-converter</string>
 	<key>category</key>
 	<string>Tools</string>
 	<key>connections</key>
@@ -23,7 +23,7 @@
 		</array>
 	</dict>
 	<key>createdby</key>
-	<string>Rex Zhang</string>
+	<string>Rex Zhang &lt;rex.zhang@gmail.com&gt;</string>
 	<key>description</key>
 	<string>Time Format Convert Tool</string>
 	<key>disabled</key>
@@ -121,6 +121,6 @@
 		</dict>
 	</dict>
 	<key>webaddress</key>
-	<string>https://github.com/rexzhang/alfred-workflow-time</string>
+	<string>https://github.com/rexzhang/alfred-workflow-time-converter</string>
 </dict>
 </plist>
