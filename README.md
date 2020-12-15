@@ -11,7 +11,7 @@ Download from [Github release](https://github.com/rexzhang/alfred-workflow-time-
 ### 0.1.0
 - first release
 
-### 0.2.0(not release yet)
+### 0.2.0
 - support time zone
 - support time shift
 

@@ -15,7 +15,7 @@ DEFAULT_FEEDBACK = [
         'icon': ICON_ERROR,
     },
     {
-        'title': 'If you want to change time zone or time shift',
+        'title': 'Change time zone or time shift',
         'subtitle': 'Examples: now +08, now +1d',
         'valid': False,
         'icon': ICON_ERROR,
