@@ -7,21 +7,28 @@ import re
 import arrow
 from workflow import ICON_CLOCK, ICON_NOTE, ICON_ERROR
 
+DEFAULT_FEEDBACK = [{
+    'title': 'Please enter timestamp, datetime string, "now", or space',
+    'subtitle': 'Examples: 1607609661, 2020-12-10 22:14:33, now +08',
+    'valid': False,
+    'icon': ICON_ERROR,
+}]
+
 FORMAT_LIST = (
-    (ICON_NOTE, 'X', 'UTC Timestamp (s)'),
-    (ICON_NOTE, 'x', 'UTC Timestamp (us)'),
+    (ICON_NOTE, True, 'X', 'Timestamp(s)'),
+    (ICON_NOTE, True, 'x', 'Timestamp(us)'),
     (
-        ICON_CLOCK, 'YYYY-MM-DD HH:mm:ss', 'Date and Time'
+        ICON_CLOCK, False, 'YYYY-MM-DD HH:mm:ss', 'Date and Time'
     ),
     (
-        ICON_CLOCK, 'W, DDDD[th day]',
+        ICON_CLOCK, False, 'W, DDDD[th day]',
         'ISO Week date and Day for year'
     ),
     (  # https://www.w3.org/TR/NOTE-datetime
-        ICON_CLOCK, 'YYYY-MM-DDTHH:mm:ssZZ',
+        ICON_CLOCK, False, 'YYYY-MM-DDTHH:mm:ssZZ',
         'W3C Format'
     ),
-    (ICON_CLOCK, arrow.FORMAT_RFC850, 'RFC850 Format'),
+    (ICON_CLOCK, False, arrow.FORMAT_RFC850, 'RFC850 Format'),
     # FORMAT_RFC3339
 )
 
@@ -119,27 +126,30 @@ class Time(object):
 
     def get_feedback(self):
         if self.time is None:
-            return [{
-                'title': 'Please enter timestamp, datetime string, "now", or space',
-                'subtitle': 'Examples: 1607609661, 2020-12-10 22:14:33, now +08',
-                'valid': False,
-                'icon': ICON_ERROR,
-            }]
+            return DEFAULT_FEEDBACK
+
+        if self.now:
+            desc_now = 'Now, '
+        else:
+            desc_now = ''
 
         f = list()
-        for icon, fmt, desc in FORMAT_LIST:
-            if self.now:
-                subtitle = 'Now, {}'.format(desc)
-            else:
-                subtitle = desc
+        for icon, force_utc, fmt, desc_format in FORMAT_LIST:
 
-            if self.zone:
-                self.time = self.time.to(self.zone[:3])
-                subtitle = '[{}]{}'.format(self.zone, subtitle)
+            if force_utc:
+                self.time = self.time.to('UTC')
+                desc_zone = 'UTC, '
+            elif self.zone and not force_utc:
+                self.time = self.time.to(self.zone)
+                desc_zone = '{}, '.format(self.zone)
             else:
                 self.time = self.time.to('local')
+                desc_zone = 'Local, '
 
             value = self.time.format(fmt)
+            subtitle = '{}{}{}'.format(
+                desc_now, desc_zone, desc_format
+            )
             f.append({
                 'title': value,
                 'subtitle': subtitle,
