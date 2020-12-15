@@ -7,12 +7,20 @@ import re
 import arrow
 from workflow import ICON_CLOCK, ICON_NOTE, ICON_ERROR
 
-DEFAULT_FEEDBACK = [{
-    'title': 'Please enter timestamp, datetime string, "now", or space',
-    'subtitle': 'Examples: 1607609661, 2020-12-10 22:14:33, now +08',
-    'valid': False,
-    'icon': ICON_ERROR,
-}]
+DEFAULT_FEEDBACK = [
+    {
+        'title': 'Please enter timestamp, datetime string, "now", or space',
+        'subtitle': 'Examples: 1607609661, 2020-12-10 22:14:33, now',
+        'valid': False,
+        'icon': ICON_ERROR,
+    },
+    {
+        'title': 'alsa support time zone and time shift',
+        'subtitle': 'Examples: now +08, now +1d',
+        'valid': False,
+        'icon': ICON_ERROR,
+    },
+]
 
 SHIFT_UNIT_MAP = {
     'ms': 'microseconds',
@@ -30,19 +38,17 @@ FORMAT_LIST = (
     (ICON_NOTE, True, 'X', 'Timestamp(s)'),
     (ICON_NOTE, True, 'x', 'Timestamp(us)'),
     (
-        ICON_CLOCK, False, 'YYYY-MM-DD HH:mm:ss', 'Date and Time'
-    ),
-    (
         ICON_CLOCK, False, 'W, DDDD[th day]',
         'ISO Week date and Day for year'
     ),
+    (ICON_CLOCK, False, 'YYYY-MM-DD HH:mm:ss', 'Date and Time'),
+    (ICON_CLOCK, False, 'YYYY-MM-DD HH:mm:ss.SSSSSS', 'Date and Time'),
+    (ICON_CLOCK, False, arrow.FORMAT_RFC3339, 'RFC3339 Format'),
     (  # https://www.w3.org/TR/NOTE-datetime
         ICON_CLOCK, False, 'YYYY-MM-DDTHH:mm:ssZZ',
         'ISO 8601/W3C Format'
     ),
     (ICON_CLOCK, False, arrow.FORMAT_RFC850, 'RFC850 Format'),
-    (ICON_CLOCK, False, arrow.FORMAT_RFC3339, 'RFC3339 Format'),
-    # FORMAT_RFC3339
 )
 
 RE_TIMEZONE = '^[+-][0-9]{2}$'
