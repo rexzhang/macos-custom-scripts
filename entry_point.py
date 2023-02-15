@@ -3,14 +3,14 @@
 
 import sys
 
-# Workflow3 supports Alfred 3's new features. The `Workflow` class
-# is also compatible with Alfred 2.
-from workflow import Workflow3
-
 from core import do_convert
 
+# Workflow3 supports Alfred 3's new features. The `Workflow` class
+# is also compatible with Alfred 2.
+from ualfred import Workflow3
 
-def main(wf):
+
+def main(workflow):
     # The Workflow3 instance will be passed to the function
     # you call from `Workflow3.run`.
     # Not super useful, as the `wf` object created in
@@ -27,20 +27,20 @@ def main(wf):
     # args = wf.args
 
     # Do stuff here ...
-    feedback = do_convert(wf)
+    feedback = do_convert(workflow)
 
     # Add an item to Alfred feedback
     # wf.add_item(u'Item title', u'Item subtitle')
     for item in feedback:
-        wf.add_item(**item)
+        workflow.add_item(**item)
 
     # Send output to Alfred. You can only call this once.
     # Well, you *can* call it multiple times, but subsequent calls
     # are ignored (otherwise the JSON sent to Alfred would be invalid).
-    wf.send_feedback()
+    workflow.send_feedback()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Create a global `Workflow3` object
     wf = Workflow3()
     # Call your entry function via `Workflow3.run()` to enable its
