@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 
 import re
@@ -55,7 +55,7 @@ RE_SHIFT = "^[+-][0-9]+[smhdwMy]$"
 
 class Time:
     wf = None
-    _query = None
+    _query: str = None
 
     time = None
     now = False
@@ -75,12 +75,11 @@ class Time:
         self._query = value.strip(" ")
 
     def do_parser(self):
-        self.wf.logger.debug(
-            f"query string:{type(self.wf.args[0])} {self.wf.args[0]}"
-        )
+        self.wf.logger.debug(f"query string:{type(self.wf.args[0])} {self.wf.args[0]}")
 
         try:
-            self.query = self.wf.args[0].encode("utf8")
+            # self.query = self.wf.args[0].encode("utf8")
+            self.query = self.wf.args[0]
         except IndexError:
             self.wf.logger.debug("parser workflow args failed.")
             return False
