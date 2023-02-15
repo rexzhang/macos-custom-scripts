@@ -1,2 +1,2 @@
-pip install -U --target=. Alfred-Workflow
-pip install -U --target=. arrow==0.17
+pip install -U --target=. ualfred
+pip install -U --target=. arrow
