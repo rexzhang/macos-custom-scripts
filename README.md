@@ -1,6 +1,6 @@
 # Alfred Workflow: Time Converter
 
-## What use
+## What
 
 ![demo-basic](docs/demo-basic.gif)
 
@@ -30,6 +30,10 @@ now -1w
 | M   | months                         |                       
 | q   | quarters(not support yest)     |     
 | y   | years                          |                          
+
+## Depend
+
+- Python3.9+
 
 ## Get it
 
