@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# encoding: utf-8
 
 from os import walk
 from os.path import join
@@ -23,7 +22,7 @@ def main():
     with open("version") as f:
         version = f.readline().rstrip("\n\r ")
 
-    zip_filename = "time-converter.{}.alfredworkflow".format(version)
+    zip_filename = f"time-converter.{version}.alfredworkflow"
     z = ZipFile(zip_filename, mode="w")
 
     for filename in FILENAME_LIST:
@@ -37,7 +36,7 @@ def main():
 
     z.close()
 
-    print("Create Alfred workflow({}) finished.".format(zip_filename))
+    print(f"Create Alfred workflow({zip_filename}) finished.")
 
 
 if __name__ == "__main__":

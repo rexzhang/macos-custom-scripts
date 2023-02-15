@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# encoding: utf-8
 
 
 import re
@@ -54,7 +53,7 @@ RE_TIMEZONE = "^[+-][0-9]{2}$"
 RE_SHIFT = "^[+-][0-9]+[smhdwMy]$"
 
 
-class Time(object):
+class Time:
     wf = None
     _query = None
 
@@ -77,7 +76,7 @@ class Time(object):
 
     def do_parser(self):
         self.wf.logger.debug(
-            "query string:{} {}".format(type(self.wf.args[0]), self.wf.args[0])
+            f"query string:{type(self.wf.args[0])} {self.wf.args[0]}"
         )
 
         try:
@@ -107,14 +106,14 @@ class Time(object):
         if info.upper() == "UTC" or info == "+00" or info == "-00":
             self.query = query
             self.zone = "UTC"
-            self.wf.logger.debug("found zone info:{}".format(self.zone))
+            self.wf.logger.debug(f"found zone info:{self.zone}")
             return True
 
         r = re.match(RE_TIMEZONE, info)
         if r:
             self.query = query
             self.zone = info
-            self.wf.logger.debug("found zone info:{}".format(self.zone))
+            self.wf.logger.debug(f"found zone info:{self.zone}")
             return True
 
         # time shift TODO
@@ -122,7 +121,7 @@ class Time(object):
         if r:
             self.query = query
             self.shift = info
-            self.wf.logger.debug("found shift info:{}".format(self.shift))
+            self.wf.logger.debug(f"found shift info:{self.shift}")
             return True
 
         return False
@@ -145,7 +144,7 @@ class Time(object):
             self.time = arrow.now()
             return True
 
-        self.wf.logger.debug("parser datetime error,query string:{}".format(self.query))
+        self.wf.logger.debug(f"parser datetime error,query string:{self.query}")
         return False
 
     def _apply_shift(self):
@@ -173,7 +172,7 @@ class Time(object):
         for icon, force_utc, fmt, desc_format in FORMAT_LIST:
             # time shift
             if self.shift:
-                desc_shift = "{}, ".format(self.shift)
+                desc_shift = f"{self.shift}, "
             else:
                 desc_shift = ""
 
