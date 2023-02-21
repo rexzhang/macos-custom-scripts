@@ -2,7 +2,7 @@
 
 import sys
 
-from core import do_convert
+from main import do_workflow
 
 # Workflow3 supports Alfred 3's new features. The `Workflow` class
 # is also compatible with Alfred 2.
@@ -26,7 +26,7 @@ def main(workflow):
     # args = wf.args
 
     # Do stuff here ...
-    feedback = do_convert(workflow)
+    feedback = do_workflow(workflow)
 
     # Add an item to Alfred feedback
     # wf.add_item(u'Item title', u'Item subtitle')

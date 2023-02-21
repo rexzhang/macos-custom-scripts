@@ -203,7 +203,7 @@ class Time:
         return f
 
 
-def do_convert(wf):
+def do_workflow(wf):
     time = Time(wf)
     time.do_parser()
 

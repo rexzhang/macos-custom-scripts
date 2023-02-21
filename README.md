@@ -1,5 +1,7 @@
 # Alfred Workflow: Time Converter
 
+[![downloads](https://img.shields.io/github/downloads/rexzhang/alfred-workflow-time-converter/total)](https://github.com/rexzhang/asgi-webdav/releases)
+
 ## What
 
 ![demo-basic](docs/demo-basic.gif)
