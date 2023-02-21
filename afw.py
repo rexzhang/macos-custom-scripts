@@ -12,8 +12,9 @@ import click
 from ualfred import Workflow3
 
 WORKFLOW_BASE_FILES = ["info.plist", "workflow_main.py", "__init__.py"]
-AFW_ENTRY_POINT_FILE = "afw_entry_point.py"
-AFW_REQUIREMENTS = []
+# AFW_ENTRY_POINT_FILE = "afw_entry_point.py"
+AFW_ENTRY_POINT_FILE = "afw.py"
+AFW_REQUIREMENTS = ["click"]
 
 
 @click.group()
@@ -85,6 +86,49 @@ def build(workflow_path: str):
 
     package_file.close()
     print(f"Create Alfred workflow[{package_path}] finished.")
+
+
+def main(workflow):
+    # The Workflow3 instance will be passed to the function
+    # you call from `Workflow3.run`.
+    # Not super useful, as the `wf` object created in
+    # the `if __name__ ...` clause below is global...
+    #
+    # Your imports go here if you want to catch import errors, which
+    # is not a bad idea, or if the modules/packages are in a directory
+    # added via `Workflow3(libraries=...)`
+    # import somemodule
+    # import anothermodule
+
+    # Get args from Workflow3, already in normalized Unicode.
+    # This is also necessary for "magic" arguments to work.
+    # args = wf.args
+
+    # Do stuff here ...
+    from workflow_main import call_workflow
+
+    feedback = call_workflow(workflow)
+
+    # Add an item to Alfred feedback
+    # wf.add_item(u'Item title', u'Item subtitle')
+    for item in feedback:
+        workflow.add_item(**item)
+
+    # Send output to Alfred. You can only call this once.
+    # Well, you *can* call it multiple times, but subsequent calls
+    # are ignored (otherwise the JSON sent to Alfred would be invalid).
+    workflow.send_feedback()
+
+
+@cli.command()
+@click.argument("query")
+def call(query):
+    # Create a global `Workflow3` object
+    wf = Workflow3()
+    # Call your entry function via `Workflow3.run()` to enable its
+    # helper functions, like exception catching, ARGV normalization,
+    # magic arguments etc.
+    sys.exit(wf.run(main))
 
 
 @cli.command()

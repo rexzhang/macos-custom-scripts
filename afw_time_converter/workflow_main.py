@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-
-
 import re
 
 import arrow
@@ -75,11 +72,12 @@ class Time:
         self._query = value.strip(" ")
 
     def do_parser(self):
-        self.wf.logger.debug(f"query string:{type(self.wf.args[0])} {self.wf.args[0]}")
+        query = self.wf.args[1]
+        self.wf.logger.debug(f"query string:{type(query)} {query}")
 
         try:
             # self.query = self.wf.args[0].encode("utf8")
-            self.query = self.wf.args[0]
+            self.query = query
         except IndexError:
             self.wf.logger.debug("parser workflow args failed.")
             return False
