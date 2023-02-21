@@ -1,46 +1,19 @@
 #!/usr/bin/env python
 
+import importlib
 import json
 import subprocess
+import sys
 from pathlib import Path
 from uuid import uuid4
 from zipfile import ZipFile
 
 import click
+from ualfred import Workflow3
 
-FILENAME_LIST = (
-    "info.plist",
-    "entry_point.py",
-    "core.py",
-)
-
-PATH_LIST = (
-    "arrow",
-    "backports",
-    "dateutil",
-    "ualfred",
-)
-
-
-# def main():
-#     with open("version") as f:
-#         version = f.readline().rstrip("\n\r ")
-#
-#     zip_filename = f"time-converter.{version}.alfredworkflow"
-#     z = ZipFile(zip_filename, mode="w")
-#
-#     for filename in FILENAME_LIST:
-#         z.write(filename)
-#
-#     for pathname in PATH_LIST:
-#         for root, dirs, files in walk(pathname):
-#             for filename in files:
-#                 if filename.rfind(".pyc") == -1:
-#                     z.write(join(root, filename))
-#
-#     z.close()
-#
-#     print(f"Create Alfred workflow({zip_filename}) finished.")
+WORKFLOW_BASE_FILES = ["info.plist", "workflow_main.py", "__init__.py"]
+AFW_ENTRY_POINT_FILE = "afw_entry_point.py"
+AFW_REQUIREMENTS = []
 
 
 @click.group()
@@ -76,6 +49,7 @@ def build(workflow_path: str):
 
             requirements.append(line)
 
+    requirements += AFW_REQUIREMENTS
     for requirement in requirements:
         subprocess.run(
             ["pip", "install", "-U", f"--target={str(build_path)}", requirement],
@@ -99,7 +73,7 @@ def build(workflow_path: str):
         package_file.write(file, arcname=arc_name)
 
     print("Add workflow files...")
-    workflow_files: list[str] = ["info.plist", "main.py", "__init__.py"]
+    workflow_files: list[str] = WORKFLOW_BASE_FILES
     icon_file = package_info.get("icon")
     if icon_file:
         workflow_files.append(icon_file)
@@ -107,14 +81,23 @@ def build(workflow_path: str):
     for file in workflow_files:
         package_file.write(workflow_path.joinpath(file), arcname=file)
 
-    package_file.write("entry_point.py")
+    package_file.write(AFW_ENTRY_POINT_FILE)
 
     package_file.close()
     print(f"Create Alfred workflow[{package_path}] finished.")
 
 
 @cli.command()
-def test():
+@click.argument("workflow_path")
+@click.argument("query")
+def test(workflow_path: str, query: str):
+    try:
+        module = importlib.import_module(workflow_path)
+    except ImportError as e:
+        print(e)
+        pass
+
+    print(module.call_workflow(wf=Workflow3()))
     click.echo("test...todo")
 
 
