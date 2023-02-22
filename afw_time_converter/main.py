@@ -1,21 +1,21 @@
 import re
 
 import arrow
-from ualfred import ICON_CLOCK, ICON_ERROR, ICON_NOTE
+from afw_runtime import *
 
-DEFAULT_FEEDBACK = [
-    {
-        "title": 'Please enter timestamp, datetime string, "now", or space',
-        "subtitle": "Examples: 1607609661, 2020-12-10 22:14:33, now",
-        "valid": False,
-        "icon": ICON_ERROR,
-    },
-    {
-        "title": "Change time zone or time shift",
-        "subtitle": "Examples: now +08, now +1d",
-        "valid": False,
-        "icon": ICON_ERROR,
-    },
+DEFAULT_RESPONSE = [
+    AFWResponse(
+        title='Please enter timestamp, datetime string, "now", or space',
+        arg="",
+        subtitle="Examples: 1607609661, 2020-12-10 22:14:33, now",
+        icon=ICON_HELP,
+    ),
+    AFWResponse(
+        title="Change time zone or time shift",
+        arg="",
+        subtitle="Examples: now +08, now +1d",
+        icon=ICON_HELP,
+    ),
 ]
 
 SHIFT_UNIT_MAP = {
@@ -51,7 +51,6 @@ RE_SHIFT = "^[+-][0-9]+[smhdwMy]$"
 
 
 class Time:
-    wf = None
     _query: str = None
 
     time = None
@@ -60,8 +59,9 @@ class Time:
     zone = None
     shift = None
 
-    def __init__(self, wf):
-        self.wf = wf
+    def __init__(self, args: list[str], logger):
+        self.args = args
+        self.logger = logger
 
     @property
     def query(self):
@@ -71,15 +71,19 @@ class Time:
     def query(self, value):
         self._query = value.strip(" ")
 
+    def __call__(self, *args, **kwargs):
+        self.do_parser()
+        return self.get_feedback()
+
     def do_parser(self):
-        query = self.wf.args[1]
-        self.wf.logger.debug(f"query string:{type(query)} {query}")
+        query = self.args[0]
+        self.logger.debug(f"query string:{type(query)} {query}")
 
         try:
             # self.query = self.wf.args[0].encode("utf8")
             self.query = query
         except IndexError:
-            self.wf.logger.debug("parser workflow args failed.")
+            self.logger.debug("parser workflow args failed.")
             return False
 
         while True:
@@ -103,14 +107,14 @@ class Time:
         if info.upper() == "UTC" or info == "+00" or info == "-00":
             self.query = query
             self.zone = "UTC"
-            self.wf.logger.debug(f"found zone info:{self.zone}")
+            self.logger.debug(f"found zone info:{self.zone}")
             return True
 
         r = re.match(RE_TIMEZONE, info)
         if r:
             self.query = query
             self.zone = info
-            self.wf.logger.debug(f"found zone info:{self.zone}")
+            self.logger.debug(f"found zone info:{self.zone}")
             return True
 
         # time shift TODO
@@ -118,7 +122,7 @@ class Time:
         if r:
             self.query = query
             self.shift = info
-            self.wf.logger.debug(f"found shift info:{self.shift}")
+            self.logger.debug(f"found shift info:{self.shift}")
             return True
 
         return False
@@ -141,7 +145,7 @@ class Time:
             self.time = arrow.now()
             return True
 
-        self.wf.logger.debug(f"parser datetime error,query string:{self.query}")
+        self.logger.debug(f"parser datetime error,query string:{self.query}")
         return False
 
     def _apply_shift(self):
@@ -158,14 +162,14 @@ class Time:
 
     def get_feedback(self):
         if self.time is None:
-            return DEFAULT_FEEDBACK
+            return DEFAULT_RESPONSE
 
         if self.now:
             desc_now = "Now, "
         else:
             desc_now = ""
 
-        f = list()
+        responses = list()
         for icon, force_utc, fmt, desc_format in FORMAT_LIST:
             # time shift
             if self.shift:
@@ -173,7 +177,7 @@ class Time:
             else:
                 desc_shift = ""
 
-            # time znone
+            # time zone
             if force_utc:
                 self.time = self.time.to("UTC")
                 desc_zone = "UTC"
@@ -188,21 +192,15 @@ class Time:
             subtitle = "{}{}[{}] {}".format(
                 desc_now, desc_shift, desc_zone, desc_format
             )
-            f.append(
-                {
-                    "title": value,
-                    "subtitle": subtitle,
-                    "valid": True,
-                    "arg": value,
-                    "icon": icon,
-                }
+            responses.append(
+                AFWResponse(
+                    title=value, arg=value, subtitle=subtitle, icon=icon, valid=True
+                )
             )
 
-        return f
+        return responses
 
 
-def call_workflow(wf):
-    time = Time(wf)
-    time.do_parser()
-
-    return time.get_feedback()
+def main(args: list[str], logger) -> list[AFWResponse]:
+    time_convert = Time(args, logger)
+    return time_convert()

@@ -13,19 +13,19 @@ def main(args: list[str], logger) -> list[AFWResponse]:
     query = args[0]
     logger.debug(query)
 
-    response = list()
+    responses = list()
     try:
         u = uuid.UUID(query)
     except ValueError as e:
         u = None
         v = str(uuid.uuid4()).upper()
-        response += [
+        responses += [
             AFWResponse(title=v, arg=v),
             AFWResponse(title=str(e), arg="", icon=ICON_ERROR),
         ]
-        response += DEFAULT_RESPONSE
+        responses += DEFAULT_RESPONSE
 
     if u is None:
-        return response
+        return responses
 
     return [AFWResponse(title=str(u), arg=str(u), icon=ICON_NOTE, valid=True)]
