@@ -11,10 +11,12 @@ from zipfile import ZipFile
 import click
 from ualfred import Workflow3
 
-WORKFLOW_BASE_FILES = ["info.plist", "workflow_main.py", "__init__.py"]
-# AFW_ENTRY_POINT_FILE = "afw_entry_point.py"
-AFW_ENTRY_POINT_FILE = "afw.py"
-AFW_REQUIREMENTS = ["click"]
+from afw_runtime import afw_responses_to_feedback
+
+AFW_RUNTIME_FILES = ["afw.py", "afw_runtime.py"]
+AFW_REQUIREMENTS = ["click", "ualfred"]
+
+AFW_WORKFLOW_BASIC_FILES = ["info.plist", "main.py"]
 
 
 @click.group()
@@ -74,7 +76,7 @@ def build(workflow_path: str):
         package_file.write(file, arcname=arc_name)
 
     print("Add workflow files...")
-    workflow_files: list[str] = WORKFLOW_BASE_FILES
+    workflow_files: list[str] = AFW_WORKFLOW_BASIC_FILES
     icon_file = package_info.get("icon")
     if icon_file:
         workflow_files.append(icon_file)
@@ -82,13 +84,14 @@ def build(workflow_path: str):
     for file in workflow_files:
         package_file.write(workflow_path.joinpath(file), arcname=file)
 
-    package_file.write(AFW_ENTRY_POINT_FILE)
+    for file in AFW_RUNTIME_FILES:
+        package_file.write(file)
 
     package_file.close()
     print(f"Create Alfred workflow[{package_path}] finished.")
 
 
-def main(workflow):
+def afw_entry(workflow):
     # The Workflow3 instance will be passed to the function
     # you call from `Workflow3.run`.
     # Not super useful, as the `wf` object created in
@@ -104,10 +107,13 @@ def main(workflow):
     # This is also necessary for "magic" arguments to work.
     # args = wf.args
 
-    # Do stuff here ...
-    from workflow_main import call_workflow
+    args = [workflow.args[1]]
 
-    feedback = call_workflow(workflow)
+    # Do stuff here ...
+    from main import main as afw_workflow_main
+
+    responses = afw_workflow_main(args, workflow.logger)
+    feedback = afw_responses_to_feedback(responses)
 
     # Add an item to Alfred feedback
     # wf.add_item(u'Item title', u'Item subtitle')
@@ -128,7 +134,7 @@ def call(query):
     # Call your entry function via `Workflow3.run()` to enable its
     # helper functions, like exception catching, ARGV normalization,
     # magic arguments etc.
-    sys.exit(wf.run(main))
+    sys.exit(wf.run(afw_entry))
 
 
 @cli.command()
