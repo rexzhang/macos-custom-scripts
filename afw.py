@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import dataclasses
 import importlib
 import json
 import subprocess
@@ -12,8 +11,6 @@ from zipfile import ZipFile
 
 import click
 from ualfred import Workflow3
-
-from afw_runtime import afw_responses_to_feedback
 
 logger = Logger(__file__)
 
@@ -116,8 +113,7 @@ def afw_entry(workflow):
     # Do stuff here ...
     from main import main as afw_workflow_main
 
-    responses = afw_workflow_main(args, workflow.logger)
-    feedback = afw_responses_to_feedback(responses)
+    feedback = afw_workflow_main(args, workflow.logger)
 
     # Add an item to Alfred feedback
     # wf.add_item(u'Item title', u'Item subtitle')
@@ -153,9 +149,8 @@ def test(workflow_path: str, query: str):
 
     wf = Workflow3()
 
-    responses = module.main(args=wf.args[2:], logger=logger)
-    for response in responses:
-        print(json.dumps(dataclasses.asdict(response), indent=4))
+    feedback = module.main(args=wf.args[2:], logger=logger)
+    print(json.dumps(feedback, indent=4))
 
 
 if __name__ == "__main__":

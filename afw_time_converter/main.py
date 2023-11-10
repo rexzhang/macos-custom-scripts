@@ -1,7 +1,14 @@
 import re
 
 import arrow
-from afw_runtime import *
+
+from afw_runtime import (
+    ICON_CLOCK,
+    ICON_HELP,
+    ICON_NOTE,
+    AFWResponse,
+    afw_responses_to_feedback,
+)
 
 DEFAULT_RESPONSE = [
     AFWResponse(
@@ -202,5 +209,4 @@ class Time:
 
 
 def main(args: list[str], logger) -> list[AFWResponse]:
-    time_convert = Time(args, logger)
-    return time_convert()
+    return afw_responses_to_feedback(Time(args, logger)())

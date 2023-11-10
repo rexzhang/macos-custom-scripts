@@ -22,17 +22,13 @@ class AFWFunc(AFWFuncAbc):
         )
 
     @property
+    def _data_success(self) -> list:
+        return self._make_data_from_uuid(self._u)
+
+    @property
     def _data_defaulte(self) -> list:
         u = uuid.uuid4()
         return self._make_data_from_uuid(u)
-
-    @property
-    def _data_tips(self) -> list:
-        return list()
-
-    @property
-    def _data_success(self) -> list:
-        return self._make_data_from_uuid(self._u)
 
     @property
     def _data_error(self) -> list:
@@ -41,6 +37,10 @@ class AFWFunc(AFWFuncAbc):
             # ("Please enter a UUID like string", ""),
             # ("Examples: 1111", ""),
         ]
+
+    @property
+    def _data_tips(self) -> list:
+        return list()
 
     def _process(self) -> list[AFWResponse]:
         try:

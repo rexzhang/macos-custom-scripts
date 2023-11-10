@@ -1,1 +1,1 @@
-from .workflow_main import call_workflow
+from .main import main
