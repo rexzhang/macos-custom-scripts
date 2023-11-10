@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 
+import dataclasses
 import importlib
 import json
 import subprocess
 import sys
+from logging import Logger
 from pathlib import Path
 from uuid import uuid4
 from zipfile import ZipFile
@@ -12,6 +14,8 @@ import click
 from ualfred import Workflow3
 
 from afw_runtime import afw_responses_to_feedback
+
+logger = Logger(__file__)
 
 AFW_RUNTIME_FILES = ["afw.py", "afw_runtime.py"]
 AFW_REQUIREMENTS = ["click", "ualfred"]
@@ -107,7 +111,7 @@ def afw_entry(workflow):
     # This is also necessary for "magic" arguments to work.
     # args = wf.args
 
-    args = [workflow.args[1]]
+    args = workflow.args[1:]
 
     # Do stuff here ...
     from main import main as afw_workflow_main
@@ -147,15 +151,7 @@ def test(workflow_path: str, query: str):
         print(e)
         exit(1)
 
-    from logging import Logger
-    import dataclasses
-    import json
-
-    logger = Logger(__file__)
-
     wf = Workflow3()
-    print(wf.args)
-    print(wf.args[2:])
 
     responses = module.main(args=wf.args[2:], logger=logger)
     for response in responses:
