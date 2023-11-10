@@ -89,7 +89,7 @@ python3 afw.py call $query</string>
 				<key>autopaste</key>
 				<false/>
 				<key>clipboardtext</key>
-				<string>aa {query}</string>
+				<string>{query}</string>
 				<key>ignoredynamicplaceholders</key>
 				<false/>
 				<key>transient</key>
