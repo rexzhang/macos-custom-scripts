@@ -16,7 +16,7 @@ class AFWFunc(AFWFuncAbc):
             (str(u.int), "The UUID as a 128-bit integer."),
             (str(u.urn), "The UUID as a URN as specified in RFC 4122."),
             (
-                str(u.version),
+                f"Version {u.version}",
                 "The UUID version number (1 through 5, specified is RFC_4122).",
             ),
         )
