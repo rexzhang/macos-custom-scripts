@@ -142,13 +142,24 @@ def call(query):
 @click.argument("query")
 def test(workflow_path: str, query: str):
     try:
-        module = importlib.import_module(workflow_path)
+        module = importlib.import_module(workflow_path, "main")
     except ImportError as e:
         print(e)
-        pass
+        exit(1)
 
-    print(module.call_workflow(wf=Workflow3()))
-    click.echo("test...todo")
+    from logging import Logger
+    import dataclasses
+    import json
+
+    logger = Logger(__file__)
+
+    wf = Workflow3()
+    print(wf.args)
+    print(wf.args[2:])
+
+    responses = module.main(args=wf.args[2:], logger=logger)
+    for response in responses:
+        print(json.dumps(dataclasses.asdict(response), indent=4))
 
 
 if __name__ == "__main__":
