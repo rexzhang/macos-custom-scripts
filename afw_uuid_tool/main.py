@@ -20,7 +20,7 @@ def main(args: list[str], logger) -> list[AFWResponse]:
         u = None
         v = str(uuid.uuid4()).upper()
         responses += [
-            AFWResponse(title=v, arg=v),
+            AFWResponse(title=v, arg=v, valid=True),
             AFWResponse(title=str(e), arg="", icon=ICON_ERROR),
         ]
         responses += DEFAULT_RESPONSE
