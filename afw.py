@@ -127,7 +127,7 @@ def afw_entry(workflow):
 
 
 @cli.command()
-@click.argument("query")
+@click.argument("query", default="")
 def call(query):
     # Create a global `Workflow3` object
     wf = Workflow3()
@@ -139,7 +139,7 @@ def call(query):
 
 @cli.command()
 @click.argument("workflow_path")
-@click.argument("query")
+@click.argument("query", default="")
 def test(workflow_path: str, query: str):
     try:
         module = importlib.import_module(workflow_path, "main")

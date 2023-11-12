@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>bundleid</key>
-	<string>com.rexzhang.alfred-workflows.uuid-tool</string>
+	<string>com.rexzhang.alfred-workflows.uuid</string>
 	<key>connections</key>
 	<dict>
 		<key>19F264BF-E5DF-4AFC-A2AA-5E0B2967246B</key>
@@ -21,13 +21,13 @@
 		</array>
 	</dict>
 	<key>createdby</key>
-	<string></string>
+	<string>Rex Zhang</string>
 	<key>description</key>
 	<string></string>
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
-	<string>UUID Tool</string>
+	<string>UUID</string>
 	<key>objects</key>
 	<array>
 		<dict>
@@ -58,9 +58,7 @@
 				<key>runningsubtext</key>
 				<string></string>
 				<key>script</key>
-				<string>query=$1
-
-python3 afw.py call $query</string>
+				<string>python3 afw.py call $1</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -72,7 +70,7 @@ python3 afw.py call $query</string>
 				<key>type</key>
 				<integer>5</integer>
 				<key>withspace</key>
-				<false/>
+				<true/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.input.scriptfilter</string>
@@ -123,6 +121,6 @@ python3 afw.py call $query</string>
 	<key>userconfigurationconfig</key>
 	<array/>
 	<key>webaddress</key>
-	<string></string>
+	<string>https://github.com/rexzhang/alfred-workflows</string>
 </dict>
 </plist>

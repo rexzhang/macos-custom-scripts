@@ -51,6 +51,7 @@ __all__ = [
     "ICON_WARNING",
     "ICON_WEB",
     "AFWResponse",
+    "AFWException",
     "afw_responses_to_feedback",
 ]
 
@@ -62,11 +63,18 @@ class AFWResponse:
     """
 
     title: str
-    arg: str
-
     subtitle: str | None = None
-    icon: str = ICON_NOTE
-    valid: bool = False
+    icon: str = ICON_INFO
+
+    arg: str | None = None
+    valid: bool = True
+
+    def __post_init__(self):
+        if self.arg is not None:
+            return
+
+        if self.valid:
+            self.arg = self.title
 
 
 def afw_responses_to_feedback(responses: list[AFWResponse]) -> list[dict]:
@@ -82,31 +90,27 @@ def afw_responses_to_feedback(responses: list[AFWResponse]) -> list[dict]:
     return result
 
 
+class AFWException(Exception):
+    pass
+
+
 class AFWFuncAbc:
-    _icon_success = ICON_INFO
-    _icon_default = ICON_INFO
-    _icon_error = ICON_ERROR
-    _icon_tip = ICON_NOTE
+    icon_info = ICON_INFO
+    icon_note = ICON_NOTE
+    icon_error = ICON_ERROR
+
+    responses: list[AFWResponse]
 
     def __init__(self, args: list[str], logger) -> None:
         self.args = args
         self.logger = logger
+        self.responses = list()
 
-    @property
-    def _data_success(self) -> list:
-        raise NotImplementedError
+    def append_response(self, response: AFWResponse):
+        self.responses.append(response)
 
-    @property
-    def _data_defaulte(self) -> list:
-        raise NotImplementedError
-
-    @property
-    def _data_error(self) -> list:
-        raise NotImplementedError
-
-    @property
-    def _data_tips(self) -> list:
-        raise NotImplementedError
+    def append_responses(self, responses: list[AFWResponse]):
+        self.responses += responses
 
     @staticmethod
     def _afw_response_to_feedback_data(responses: list[AFWResponse]) -> list[dict]:
@@ -121,68 +125,22 @@ class AFWFuncAbc:
 
         return result
 
-    def get_feedback_success(self) -> list[dict]:
-        responses = [
-            AFWResponse(
-                title=title,
-                arg=title,
-                subtitle=subtitle,
-                icon=self._icon_success,
-                valid=True,
-            )
-            for title, subtitle in self._data_success
-        ] + [
-            AFWResponse(
-                title=title,
-                arg=title,
-                subtitle=subtitle,
-                icon=self._icon_tip,
-                valid=False,
-            )
-            for title, subtitle in self._data_tips
-        ]
-        return self._afw_response_to_feedback_data(responses)
-
-    def get_feedback_fail(self) -> list[dict]:
-        responses = (
-            [
-                AFWResponse(
-                    title=title,
-                    arg=title,
-                    subtitle=subtitle,
-                    icon=self._icon_error,
-                    valid=False,
-                )
-                for title, subtitle in self._data_error
-            ]
-            + [
-                AFWResponse(
-                    title=title,
-                    arg=title,
-                    subtitle=subtitle,
-                    icon=self._icon_default,
-                    valid=True,
-                )
-                for title, subtitle in self._data_defaulte
-            ]
-            + [
-                AFWResponse(
-                    title=title,
-                    arg=title,
-                    subtitle=subtitle,
-                    icon=self._data_tips,
-                    valid=False,
-                )
-                for title, subtitle in self._data_tips
-            ]
-        )
-        return self._afw_response_to_feedback_data(responses)
+    def get_reponse_error(self, message: str) -> AFWResponse:
+        return AFWResponse(title=message, icon=self.icon_error, valid=False)
 
     def _process(self) -> bool:
         raise NotImplementedError
 
     def __call__(self) -> list[dict]:
-        if self._process():
-            return self.get_feedback_success()
+        self.logger.debug(self.args)
 
-        return self.get_feedback_fail()
+        try:
+            self._process()
+        except AFWException as e:
+            self.append_response(self.get_reponse_error(e))
+            return self._afw_response_to_feedback_data(self.responses)
+
+        if not self.responses:
+            pass
+
+        return self._afw_response_to_feedback_data(self.responses)
