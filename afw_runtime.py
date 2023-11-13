@@ -1,4 +1,5 @@
 import dataclasses
+from logging import Logger
 
 from ualfred import (
     ICON_ACCOUNT,
@@ -99,9 +100,11 @@ class AFWFuncAbc:
     icon_note = ICON_NOTE
     icon_error = ICON_ERROR
 
+    args: list[str]
+    logger: Logger
     responses: list[AFWResponse]
 
-    def __init__(self, args: list[str], logger) -> None:
+    def __init__(self, args: list[str], logger: Logger) -> None:
         self.args = args
         self.logger = logger
         self.responses = list()

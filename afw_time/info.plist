@@ -3,9 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>bundleid</key>
-	<string>com.rexzhang.alfred-workflow-time-converter</string>
-	<key>category</key>
-	<string>Tools</string>
+	<string>com.rexzhang.alfred-workflows.time</string>
 	<key>connections</key>
 	<dict>
 		<key>A0BEA961-6062-42BD-9606-2257AA07F7AD</key>
@@ -23,13 +21,13 @@
 		</array>
 	</dict>
 	<key>createdby</key>
-	<string>Rex Zhang &lt;rex.zhang@gmail.com&gt;</string>
+	<string>Rex Zhang</string>
 	<key>description</key>
 	<string>Time Format Convert Tool</string>
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
-	<string>Time Converter</string>
+	<string>Time</string>
 	<key>objects</key>
 	<array>
 		<dict>
@@ -44,7 +42,7 @@
 				<key>argumenttrimmode</key>
 				<integer>0</integer>
 				<key>argumenttype</key>
-				<integer>0</integer>
+				<integer>1</integer>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>keyword</key>
@@ -60,17 +58,17 @@
 				<key>runningsubtext</key>
 				<string></string>
 				<key>script</key>
-				<string>python3 afw.py call "{query}"</string>
+				<string>python3 afw.py call $1</string>
 				<key>scriptargtype</key>
-				<integer>0</integer>
+				<integer>1</integer>
 				<key>scriptfile</key>
-				<string>ls</string>
+				<string></string>
 				<key>subtext</key>
-				<string>Examples: 1607609661, 2020-12-10 22:14:33, now</string>
+				<string></string>
 				<key>title</key>
-				<string>Please enter timestamp, datetime string, "now", or space</string>
+				<string></string>
 				<key>type</key>
-				<integer>0</integer>
+				<integer>5</integer>
 				<key>withspace</key>
 				<true/>
 			</dict>
@@ -108,19 +106,21 @@
 		<key>A0BEA961-6062-42BD-9606-2257AA07F7AD</key>
 		<dict>
 			<key>xpos</key>
-			<integer>275</integer>
+			<real>275</real>
 			<key>ypos</key>
-			<integer>145</integer>
+			<real>145</real>
 		</dict>
 		<key>E35A1CC1-CA0E-44E7-A39D-DB1C877AC4FC</key>
 		<dict>
 			<key>xpos</key>
-			<integer>425</integer>
+			<real>425</real>
 			<key>ypos</key>
-			<integer>145</integer>
+			<real>145</real>
 		</dict>
 	</dict>
+	<key>userconfigurationconfig</key>
+	<array/>
 	<key>webaddress</key>
-	<string>https://github.com/rexzhang/alfred-workflow-time-converter</string>
+	<string>https://github.com/rexzhang/alfred-workflows</string>
 </dict>
 </plist>

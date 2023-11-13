@@ -2,17 +2,15 @@
 
 import importlib
 import json
+import logging
 import subprocess
 import sys
-from logging import Logger
 from pathlib import Path
 from uuid import uuid4
 from zipfile import ZipFile
 
 import click
 from ualfred import Workflow3
-
-logger = Logger(__file__)
 
 AFW_RUNTIME_FILES = ["afw.py", "afw_runtime.py"]
 AFW_REQUIREMENTS = ["click", "ualfred"]
@@ -149,7 +147,8 @@ def test(workflow_path: str, query: str):
 
     wf = Workflow3()
 
-    feedback = module.main(args=wf.args[2:], logger=logger)
+    logging.basicConfig(level=logging.DEBUG)
+    feedback = module.main(args=wf.args[2:], logger=logging)
     print(json.dumps(feedback, indent=4))
 
 
