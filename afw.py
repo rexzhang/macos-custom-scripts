@@ -26,6 +26,8 @@ def cli():
 @cli.command()
 @click.argument("workflow_path")
 def build(workflow_path: str):
+    logging.basicConfig(level=logging.INFO)
+
     workflow_path = Path(".").joinpath(workflow_path)
 
     # load package info
@@ -42,7 +44,7 @@ def build(workflow_path: str):
     )
 
     # build package - depend
-    print("Prepare...")
+    logging.info("Prepare...")
     requirements: list[str] = list()
     with open(workflow_path.joinpath("requirements.txt")) as f:
         for line in f.readlines():
@@ -64,17 +66,17 @@ def build(workflow_path: str):
     # for filename in FILENAME_LIST:
     #     package_file.write(filename)
 
-    print("Add 3rd depends files...")
+    logging.info("Add 3rd depends files...")
     build_path_str_length = len(str(build_path)) + 1
     for file in build_path.rglob("*"):
         if file.suffix == ".pyc" or file.name == "__pycache__":
             continue
 
         arc_name = str(file)[build_path_str_length:]
-        print(arc_name)
+        logging.info(arc_name)
         package_file.write(file, arcname=arc_name)
 
-    print("Add workflow files...")
+    logging.info("Add workflow files...")
     workflow_files: list[str] = AFW_WORKFLOW_BASIC_FILES
     icon_file = package_info.get("icon")
     if icon_file:
@@ -87,7 +89,8 @@ def build(workflow_path: str):
         package_file.write(file)
 
     package_file.close()
-    print(f"Create Alfred workflow[{package_path}] finished.")
+
+    logging.info(f"Create Alfred workflow[{package_path}] finished.")
 
 
 def afw_entry(workflow):
