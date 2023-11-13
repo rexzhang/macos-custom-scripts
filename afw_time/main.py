@@ -148,7 +148,7 @@ class AFWFunc(AFWFuncAbc):
             ),
             AFWResponse(
                 title=self._time.time.format(arrow.FORMAT_RFC850),
-                subtitle="The time[{self.zone}] as RFC850 Formaself._time.",
+                subtitle=f"The time[{self.zone}] as RFC850 Formaself._time.",
                 icon=self.icon_info,
             ),
         ]
