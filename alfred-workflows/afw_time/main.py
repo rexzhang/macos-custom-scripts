@@ -3,7 +3,6 @@ from collections import deque
 from logging import Logger
 
 import arrow
-
 from afw_runtime import ICON_CLOCK, AFWException, AFWFuncAbc, AFWResponse
 
 SHIFT_UNIT_MAP = {
