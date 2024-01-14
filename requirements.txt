@@ -1,0 +1,4 @@
+-r alfred-workflows/requirements.txt
+
+# dev
+deptree
