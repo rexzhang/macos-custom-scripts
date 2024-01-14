@@ -1,9 +1,10 @@
 # Hammerspoon
 
-## 键盘输入全角符号转半角`modules.banjiao`
+## 半角(`modules.banjiao`)
 
 > 在撰写MarkDown文档时,需要在中文输入法模式下键入大量的MarkDown控制符;但这些控制符需要使用半角
 
+- 键盘输入内容全角符号自动替换为半角
 - 通过修改`app_map``replace_map`这两个字典调整脚本的行为
 
 ## Install

@@ -5,6 +5,22 @@
 
 ## Alfred Workflows
 
+### Time
+
+> 日期格式转换
+
+### UUID
+
+> UUID 生成/转换
+
+## Hammerspoon
+
+### 半角
+
+> 键盘输入内容全角符号自动替换为半角
+
 ## xBar Plugins
 
 ### Services Mgr
+
+> 配置驱动的服务管理
