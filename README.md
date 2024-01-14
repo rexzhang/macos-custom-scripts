@@ -4,3 +4,7 @@
 - 直接在 macOS环境下使用的脚本
 
 ## Alfred Workflows
+
+## xBar Plugins
+
+### Services Mgr

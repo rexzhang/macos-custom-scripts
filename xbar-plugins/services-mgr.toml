@@ -1,0 +1,44 @@
+[[services]]
+name = "ZeroTier"
+# You will need to add the following line to your sudoers file. Remember to edit
+# sudoers with `sudo visudo`.
+#
+# %admin          ALL = NOPASSWD:/bin/launchctl
+start_shell = [
+    "/usr/bin/sudo",
+    "launchctl",
+    "load",
+    "/Library/LaunchDaemons/com.zerotier.one.plist",
+]
+stop_shell = [
+    "/usr/bin/sudo",
+    "launchctl",
+    "unload",
+    "/Library/LaunchDaemons/com.zerotier.one.plist",
+]
+status_shell = [
+    "zerotier-cli",
+    "info",
+]
+status_on_regex = "200 info [0-9a-z]+ (\\d+\\.)?(\\d+\\.)?(\\*|\\d+) ONLINE"
+
+[[services]]
+name = "Redis"
+start_shell = [
+    "brew",
+    "services",
+    "start",
+    "redis",
+]
+stop_shell = [
+    "brew",
+    "services",
+    "stop",
+    "redis",
+]
+status_shell = [
+    "redis-cli",
+    "INFO",
+    "server",
+] # redis-server --version
+status_on_regex = "redis_version:(\\d+\\.)?(\\d+\\.)?(\\*|\\d+)"
