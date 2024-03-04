@@ -88,7 +88,12 @@ def get_services_status(services: list[Service]) -> list[Service]:
         if len(service.status_shell) == 0 or len(service.status_on_regex) == 0:
             continue
 
-        result = subprocess.run(service.status_shell, capture_output=True)
+        try:
+            result = subprocess.run(service.status_shell, capture_output=True)
+        except FileNotFoundError:
+            services[index].status = ServiceStatus.ERROR
+            continue
+
         m = re.search(service.status_on_regex, result.stdout.decode("utf-8"))
         if m is None:
             services[index].status = ServiceStatus.OFF
