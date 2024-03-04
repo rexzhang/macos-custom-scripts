@@ -44,7 +44,7 @@ class Service:
 
     status: ServiceStatus = field(default=ServiceStatus.UNKNOW)
     status_shell: list[str] = field(default_factory=list)
-    status_on_regex: str = field(default_factory=str)
+    status_on_regex: str | None = None
 
 
 def load_config() -> list[Service]:
@@ -85,7 +85,7 @@ def load_config() -> list[Service]:
 def get_services_status(services: list[Service]) -> list[Service]:
     for index in range(len(services)):
         service = services[index]
-        if len(service.status_shell) == 0 or len(service.status_on_regex) == 0:
+        if len(service.status_shell) == 0:
             continue
 
         try:
@@ -94,11 +94,18 @@ def get_services_status(services: list[Service]) -> list[Service]:
             services[index].status = ServiceStatus.ERROR
             continue
 
-        m = re.search(service.status_on_regex, result.stdout.decode("utf-8"))
-        if m is None:
-            services[index].status = ServiceStatus.OFF
+        if service.status_on_regex is None:
+            if result.returncode == 0:
+                services[index].status = ServiceStatus.ON
+            else:
+                services[index].status = ServiceStatus.OFF
+
         else:
-            services[index].status = ServiceStatus.ON
+            m = re.search(service.status_on_regex, result.stdout.decode("utf-8"))
+            if m is None:
+                services[index].status = ServiceStatus.OFF
+            else:
+                services[index].status = ServiceStatus.ON
 
     return services
 
@@ -120,7 +127,7 @@ def print_menu(services: list[Service]):
 
     for service in services:
         if service.status == ServiceStatus.UNKNOW:
-            print(f"{service.name}")
+            print(f"{service.name}: ?")
         else:
             print(f"{service.name}: {service.status.name}")
 
