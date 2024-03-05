@@ -19,7 +19,7 @@
 
 > 键盘输入内容全角符号自动替换为半角
 
-## xBar Plugins
+## [xBar/SwiftBar](https://github.com/swiftbar/SwiftBar) Plugins
 
 ### Services Mgr
 
