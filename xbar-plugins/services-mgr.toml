@@ -1,0 +1,34 @@
+[[services]]
+name = "WireGuard"
+icon = "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAY1BMVEVHcEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD////Iv5pwAAAAH3RSTlMAA0yMvd6sez0V7/qzbglj5qR0Ncj1KA7VLlQflkGEXYPQGAAAAAFiS0dEILNrPYAAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAAHdElNRQfiCB0GISSxSlkqAAABpklEQVQ4y2VT7YKEIAik1GyzTNus1nbz/d/y8AO3u+OXIMLMgABkTcu4EJ1kvJN9A3/twYYQghqnHvQ8BMMev+/neB2sZEt8++SrcvJWpbEhmdiy3wL0IfBapOlCMZkDezsL9A7KWMq1aVPVThhzpADPXTZVEpzgL/Q9+VRxrX44WB8xCvJdbNKHu6klYhjvJSrCsE7PrbV2R9iUITCbOqo5Qz7fmPEYSrQHT+99FfV9qyvhXU42jcPja/hsX+pj5fDEp8h+QKIPLCYrCFMQ4EuWxMkVqLADV1TEhLEcIjeSQgEdUNUrHrpmRnU+lTsQyw+ARuhumTWireq6WmuMDL31GghNAcnpiDpNrySEnkxNGCvcEK4p7Yv2vtlIyMCqkmaScZInW8/YK1RoZRajhileIOsB8ZI8pinsD8SGIHZH0dI5jiVRZpIPKHCbwy+ahUqoaPa+Ls9Js2B5AQYCDM1RxgGWGkfr8zwEtj5Rlg5HrmPInLQifcY8pT9RpTy279c6Ew7V1p+ITty8m3061ENde9654Ozr3//ePeOHsNfCxsvrGv4BOvFCaHw59FkAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTgtMDgtMjlUMTA6MzM6MzYtMDQ6MDCYYoC0AAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE4LTA4LTI5VDEwOjMzOjM2LTA0OjAw6T84CAAAAABJRU5ErkJggg=="
+start_shell = ["sudo", "wg-quick", "up", "wg0"]
+stop_shell = ["sudo", "wg-quick", "down", "wg0"]
+status_shell = ["ls", "/var/run/wireguard/wg0.name"]
+
+[[services]]
+name = "ZeroTier"
+# You will need to add the following line to your sudoers file. Remember to edit
+# sudoers with `sudo visudo`.
+#
+# %admin          ALL = NOPASSWD:/bin/launchctl
+start_shell = [
+    "/usr/bin/sudo",
+    "launchctl",
+    "load",
+    "/Library/LaunchDaemons/com.zerotier.one.plist",
+]
+stop_shell = [
+    "/usr/bin/sudo",
+    "launchctl",
+    "unload",
+    "/Library/LaunchDaemons/com.zerotier.one.plist",
+]
+status_shell = ["zerotier-cli", "info"]
+status_on_regex = "200 info [0-9a-z]+ (\\d+\\.)?(\\d+\\.)?(\\*|\\d+) ONLINE"
+
+[[services]]
+name = "Redis"
+start_shell = ["brew", "services", "start", "redis"]
+stop_shell = ["brew", "services", "stop", "redis"]
+status_shell = ["redis-cli", "INFO", "server"]                   # redis-server --version
+status_on_regex = "redis_version:(\\d+\\.)?(\\d+\\.)?(\\*|\\d+)"

@@ -39,12 +39,14 @@ class ServiceStatus(Enum):
 @dataclass
 class Service:
     name: str
-    start_shell: list[str]
-    stop_shell: list[str]
+    icon: str | None = None
 
     status: ServiceStatus = field(default=ServiceStatus.UNKNOW)
     status_shell: list[str] = field(default_factory=list)
     status_on_regex: str | None = None
+
+    start_shell: list[str] | None = None
+    stop_shell: list[str] | None = None
 
 
 def load_config() -> list[Service]:
@@ -126,10 +128,11 @@ def print_menu(services: list[Service]):
     print("---")
 
     for service in services:
-        if service.status == ServiceStatus.UNKNOW:
-            print(f"{service.name}: ?")
-        else:
-            print(f"{service.name}: {service.status.name}")
+        display = f"{service.name}: {service.status.name}"
+        if service.icon:
+            display = f"{display} | templateImage={service.icon}"
+
+        print(display)
 
         if service.status == ServiceStatus.ON:
             print("-- Start")
