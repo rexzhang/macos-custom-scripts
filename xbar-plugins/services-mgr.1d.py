@@ -38,7 +38,8 @@ class ServiceStatus(Enum):
 
 @dataclass
 class Service:
-    name: str
+    enable: bool = True
+    name: str = "PLEASE CHANGE NAME"
     icon: str | None = None
 
     status: ServiceStatus = field(default=ServiceStatus.UNKNOW)
@@ -85,31 +86,38 @@ def load_config() -> list[Service]:
 
 
 def get_services_status(services: list[Service]) -> list[Service]:
+    data = list()
+
     for index in range(len(services)):
         service = services[index]
+        if not service.enable:
+            continue
+
         if len(service.status_shell) == 0:
             continue
 
         try:
             result = subprocess.run(service.status_shell, capture_output=True)
         except FileNotFoundError:
-            services[index].status = ServiceStatus.ERROR
+            service.status = ServiceStatus.ERROR
             continue
 
         if service.status_on_regex is None:
             if result.returncode == 0:
-                services[index].status = ServiceStatus.ON
+                service.status = ServiceStatus.ON
             else:
-                services[index].status = ServiceStatus.OFF
+                service.status = ServiceStatus.OFF
 
         else:
             m = re.search(service.status_on_regex, result.stdout.decode("utf-8"))
             if m is None:
-                services[index].status = ServiceStatus.OFF
+                service.status = ServiceStatus.OFF
             else:
-                services[index].status = ServiceStatus.ON
+                service.status = ServiceStatus.ON
 
-    return services
+        data.append(service)
+
+    return data
 
 
 def _convert_shell_call_to_menu_str(shell_call: list[str]) -> str:
